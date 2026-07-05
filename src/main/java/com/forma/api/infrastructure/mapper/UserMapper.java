@@ -1,8 +1,8 @@
 package com.forma.api.infrastructure.mapper;
 
 import com.forma.api.domain.model.User;
-import com.forma.api.infrastructure.requestDto.UserRequestDTO;
-import com.forma.api.infrastructure.responseDto.UserResponseDTO;
+import com.forma.api.infrastructure.requestDto.userDto.UserRequestDTO;
+import com.forma.api.infrastructure.requestDto.userDto.UserResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

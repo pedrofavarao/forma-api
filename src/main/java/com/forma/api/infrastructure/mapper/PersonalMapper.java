@@ -1,9 +1,10 @@
 package com.forma.api.infrastructure.mapper;
 
 import com.forma.api.domain.model.Personal;
-import com.forma.api.infrastructure.requestDto.PersonalPatchDTO;
-import com.forma.api.infrastructure.requestDto.PersonalRequestDTO;
-import com.forma.api.infrastructure.responseDto.PersonalResponseDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestUpdateDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalResquestPatchDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestCreateDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -18,14 +19,16 @@ public interface PersonalMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "students", ignore = true)
-    Personal toEntity(PersonalRequestDTO dto);
+    Personal toEntity(PersonalRequestCreateDTO dto);
 
     PersonalResponseDTO toResponse(Personal personal);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "students", ignore = true)
     @Mapping(target = "user", ignore = true)
-    void updateEntityFromDto(PersonalRequestDTO dto, @MappingTarget Personal entity);
+    void update(PersonalRequestUpdateDTO dto, @MappingTarget Personal entity);
 
-    void patch(PersonalPatchDTO dto, @MappingTarget Personal personal);
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "students", ignore = true)
+    void patch(PersonalResquestPatchDTO dto, @MappingTarget Personal personal);
 }

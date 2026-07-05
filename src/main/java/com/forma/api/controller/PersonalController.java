@@ -1,8 +1,9 @@
 package com.forma.api.controller;
 
-import com.forma.api.infrastructure.requestDto.PersonalPatchDTO;
-import com.forma.api.infrastructure.requestDto.PersonalRequestDTO;
-import com.forma.api.infrastructure.responseDto.PersonalResponseDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestUpdateDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalResquestPatchDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestCreateDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalResponseDTO;
 import com.forma.api.service.PersonalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class PersonalController {
     private PersonalService personalService;
 
     @PostMapping
-    public ResponseEntity<PersonalResponseDTO> create(@Valid @RequestBody PersonalRequestDTO personal){
+    public ResponseEntity<PersonalResponseDTO> create(@Valid @RequestBody PersonalRequestCreateDTO personal){
         PersonalResponseDTO personalCreated = personalService.create(personal);
         return ResponseEntity.status(HttpStatus.CREATED).body(personalCreated);
     }
@@ -60,13 +61,13 @@ public class PersonalController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PersonalResponseDTO> update(@Valid @RequestBody PersonalRequestDTO personalUpdate, @PathVariable UUID id){
+    public ResponseEntity<PersonalResponseDTO> update(@Valid @RequestBody PersonalRequestUpdateDTO personalUpdate, @PathVariable UUID id){
         PersonalResponseDTO response = personalService.update(id, personalUpdate);
         return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<PersonalResponseDTO> parseUpdate(@Valid @RequestBody PersonalPatchDTO personalUpdate, @PathVariable UUID id){
+    public ResponseEntity<PersonalResponseDTO> parseUpdate(@Valid @RequestBody PersonalResquestPatchDTO personalUpdate, @PathVariable UUID id){
         PersonalResponseDTO response = personalService.patch(id, personalUpdate);
         return ResponseEntity.ok().body(response);
     }

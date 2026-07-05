@@ -4,9 +4,10 @@ import com.forma.api.domain.Role;
 import com.forma.api.domain.model.Personal;
 import com.forma.api.domain.repository.PersonalRepository;
 import com.forma.api.infrastructure.mapper.PersonalMapper;
-import com.forma.api.infrastructure.requestDto.PersonalPatchDTO;
-import com.forma.api.infrastructure.requestDto.PersonalRequestDTO;
-import com.forma.api.infrastructure.responseDto.PersonalResponseDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestUpdateDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalResquestPatchDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestCreateDTO;
+import com.forma.api.infrastructure.requestDto.personalDto.PersonalResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class PersonalService {
     private PersonalMapper mapper;
 
     @Transactional
-    public PersonalResponseDTO create(PersonalRequestDTO personalDto) {
+    public PersonalResponseDTO create(PersonalRequestCreateDTO personalDto) {
         Personal personal = mapper.toEntity(personalDto);
         personal.getUser().setUserType(Role.PERSONAL);
         Personal personalCreated = personalRepository.save(personal);
@@ -65,16 +66,16 @@ public class PersonalService {
     }
 
     @Transactional
-    public PersonalResponseDTO update(UUID id, PersonalRequestDTO personalDto) {
+    public PersonalResponseDTO update(UUID id, PersonalRequestUpdateDTO personalDto) {
         // TODO Tratar corretamente Retornos e excessões
         Personal personal = personalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Personal não encontrado"));
-        mapper.updateEntityFromDto(personalDto, personal);
+        mapper.update(personalDto, personal);
         return mapper.toResponse(personal);
     }
 
     @Transactional
-    public PersonalResponseDTO patch(UUID id, PersonalPatchDTO dto) {
+    public PersonalResponseDTO patch(UUID id, PersonalResquestPatchDTO dto) {
         Personal personal = personalRepository.findById(id)
                 .orElseThrow();
         mapper.patch(dto, personal);

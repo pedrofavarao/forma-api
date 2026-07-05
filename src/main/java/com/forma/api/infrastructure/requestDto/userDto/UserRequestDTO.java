@@ -1,4 +1,4 @@
-package com.forma.api.infrastructure.requestDto;
+package com.forma.api.infrastructure.requestDto.userDto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
