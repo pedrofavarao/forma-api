@@ -1,10 +1,11 @@
 package com.forma.api.infrastructure.mapper;
 
 import com.forma.api.domain.model.Personal;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestUpdateDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalResquestPatchDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestCreateDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalResponseDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalRequestUpdateDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalResquestPatchDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalRequestCreateDTO;
+import com.forma.api.infrastructure.dto.personalDto.response.PersonalDetailsResponseDTO;
+import com.forma.api.infrastructure.dto.personalDto.response.PersonalSummaryResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -13,15 +14,16 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(
         componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = UserMapper.class
+        uses = {UserMapper.class, StudentMapper.class}
 )
 public interface PersonalMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "students", ignore = true)
     Personal toEntity(PersonalRequestCreateDTO dto);
 
-    PersonalResponseDTO toResponse(Personal personal);
+    PersonalDetailsResponseDTO toResponse(Personal personal);
+
+    PersonalSummaryResponseDTO toSimpleResponse(Personal personal);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "students", ignore = true)

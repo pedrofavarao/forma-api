@@ -1,4 +1,4 @@
-package com.forma.api.infrastructure.requestDto.userDto;
+package com.forma.api.infrastructure.dto.userDto.response;
 
 import java.util.UUID;
 

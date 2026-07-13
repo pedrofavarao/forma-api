@@ -17,6 +17,7 @@ public class Student {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Personal professor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "personal_id")
+    private Personal personal;
 }

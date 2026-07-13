@@ -3,11 +3,12 @@ package com.forma.api.service;
 import com.forma.api.domain.Role;
 import com.forma.api.domain.model.Personal;
 import com.forma.api.domain.repository.PersonalRepository;
+import com.forma.api.infrastructure.dto.personalDto.response.PersonalDetailsResponseDTO;
+import com.forma.api.infrastructure.dto.personalDto.response.PersonalSummaryResponseDTO;
 import com.forma.api.infrastructure.mapper.PersonalMapper;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestUpdateDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalResquestPatchDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestCreateDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalResponseDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalRequestUpdateDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalResquestPatchDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalRequestCreateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,36 +28,41 @@ public class PersonalService {
     private PersonalMapper mapper;
 
     @Transactional
-    public PersonalResponseDTO create(PersonalRequestCreateDTO personalDto) {
+    public PersonalDetailsResponseDTO create(PersonalRequestCreateDTO personalDto) {
         Personal personal = mapper.toEntity(personalDto);
         personal.getUser().setUserType(Role.PERSONAL);
         Personal personalCreated = personalRepository.save(personal);
         return mapper.toResponse(personalCreated);
     }
 
-    public PersonalResponseDTO find(UUID id) {
+    public PersonalDetailsResponseDTO find(UUID id) {
         Optional<Personal> personalFound = personalRepository.findById(id);
         return mapper.toResponse(personalFound.orElse(null));
     }
 
-    public PersonalResponseDTO findByEmail(String email) {
+    public PersonalSummaryResponseDTO findWithStudents(UUID id) {
+        Optional<Personal> personalFound = personalRepository.findCompleteById(id);
+        return mapper.toSimpleResponse(personalFound.orElse(null));
+    }
+
+    public PersonalSummaryResponseDTO findByEmail(String email) {
         Optional<Personal> personalFound = personalRepository.findByUserEmail(email);
-        return mapper.toResponse(personalFound.orElse(null));
+        return mapper.toSimpleResponse(personalFound.orElse(null));
     }
 
-    public PersonalResponseDTO findByUserName(String username) {
+    public PersonalSummaryResponseDTO findByUserName(String username) {
         Optional<Personal> personalFound = personalRepository.findByUserUsername(username);
-        return mapper.toResponse(personalFound.orElse(null));
+        return mapper.toSimpleResponse(personalFound.orElse(null));
     }
 
-    public PersonalResponseDTO findByCref(String cref) {
+    public PersonalSummaryResponseDTO findByCref(String cref) {
         Optional<Personal> personalFound = personalRepository.findByCref(cref);
-        return mapper.toResponse(personalFound.orElse(null));
+        return mapper.toSimpleResponse(personalFound.orElse(null));
     }
 
-    public List<PersonalResponseDTO> findAll() {
+    public List<PersonalSummaryResponseDTO> findAll() {
         List<Personal> personals = personalRepository.findAll();
-        List<PersonalResponseDTO> listResponse = personals.stream().map(p -> mapper.toResponse(p)).toList();
+        List<PersonalSummaryResponseDTO> listResponse = personals.stream().map(p -> mapper.toSimpleResponse(p)).toList();
         return listResponse;
     }
 
@@ -66,20 +72,20 @@ public class PersonalService {
     }
 
     @Transactional
-    public PersonalResponseDTO update(UUID id, PersonalRequestUpdateDTO personalDto) {
+    public PersonalSummaryResponseDTO update(UUID id, PersonalRequestUpdateDTO personalDto) {
         // TODO Tratar corretamente Retornos e excessões
         Personal personal = personalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Personal não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Personal not found"));
         mapper.update(personalDto, personal);
-        return mapper.toResponse(personal);
+        return mapper.toSimpleResponse(personal);
     }
 
     @Transactional
-    public PersonalResponseDTO patch(UUID id, PersonalResquestPatchDTO dto) {
+    public PersonalSummaryResponseDTO patch(UUID id, PersonalResquestPatchDTO dto) {
         Personal personal = personalRepository.findById(id)
                 .orElseThrow();
         mapper.patch(dto, personal);
-        return mapper.toResponse(personal);
+        return mapper.toSimpleResponse(personal);
     }
 
 }

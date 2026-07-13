@@ -1,10 +1,10 @@
-package com.forma.api.infrastructure.requestDto.personalDto;
+package com.forma.api.infrastructure.dto.personalDto.request;
 
-import com.forma.api.infrastructure.requestDto.userDto.UserRequestDTO;
+import com.forma.api.infrastructure.dto.userDto.request.UserRequestDTO;
+import com.forma.api.infrastructure.validator.ValidCref;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record PersonalRequestCreateDTO(
@@ -17,10 +17,7 @@ public record PersonalRequestCreateDTO(
         String name,
 
         @NotBlank(message = "{validation.cref.required}")
-        @Pattern(
-                regexp = "^[0-9]{6,10}-[A-Z0-9]+$",
-                message = "{validation.cref.pattern}"
-        )
+        @ValidCref
         String cref
 ) {
 }

@@ -1,9 +1,10 @@
 package com.forma.api.controller;
 
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestUpdateDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalResquestPatchDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalRequestCreateDTO;
-import com.forma.api.infrastructure.requestDto.personalDto.PersonalResponseDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalRequestUpdateDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalResquestPatchDTO;
+import com.forma.api.infrastructure.dto.personalDto.request.PersonalRequestCreateDTO;
+import com.forma.api.infrastructure.dto.personalDto.response.PersonalDetailsResponseDTO;
+import com.forma.api.infrastructure.dto.personalDto.response.PersonalSummaryResponseDTO;
 import com.forma.api.service.PersonalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,20 @@ public class PersonalController {
     private PersonalService personalService;
 
     @PostMapping
-    public ResponseEntity<PersonalResponseDTO> create(@Valid @RequestBody PersonalRequestCreateDTO personal){
-        PersonalResponseDTO personalCreated = personalService.create(personal);
+    public ResponseEntity<PersonalDetailsResponseDTO> create(@Valid @RequestBody PersonalRequestCreateDTO personal){
+        PersonalDetailsResponseDTO personalCreated = personalService.create(personal);
         return ResponseEntity.status(HttpStatus.CREATED).body(personalCreated);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonalResponseDTO> getPersonal(@PathVariable UUID id){
-        PersonalResponseDTO response = personalService.find(id);
+    public ResponseEntity<PersonalDetailsResponseDTO> getPersonal(@PathVariable UUID id){
+        PersonalDetailsResponseDTO response = personalService.find(id);
+        return ResponseEntity.status(HttpStatus.FOUND).body(response);
+    }
+
+    @GetMapping("/{id}/students")
+    public ResponseEntity<PersonalSummaryResponseDTO> getPersonalWithStudents(@PathVariable UUID id){
+        PersonalSummaryResponseDTO response = personalService.findWithStudents(id);
         return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
@@ -47,7 +54,7 @@ public class PersonalController {
                 return ResponseEntity.ok(personalService.findByUserName(username));
             }
 
-            if (username != null) {
+            if (cref != null) {
                 return ResponseEntity.ok(personalService.findByCref(cref));
             }
 
@@ -61,14 +68,14 @@ public class PersonalController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<PersonalResponseDTO> update(@Valid @RequestBody PersonalRequestUpdateDTO personalUpdate, @PathVariable UUID id){
-        PersonalResponseDTO response = personalService.update(id, personalUpdate);
+    public ResponseEntity<PersonalSummaryResponseDTO> update(@Valid @RequestBody PersonalRequestUpdateDTO personalUpdate, @PathVariable UUID id){
+        PersonalSummaryResponseDTO response = personalService.update(id, personalUpdate);
         return ResponseEntity.ok().body(response);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<PersonalResponseDTO> parseUpdate(@Valid @RequestBody PersonalResquestPatchDTO personalUpdate, @PathVariable UUID id){
-        PersonalResponseDTO response = personalService.patch(id, personalUpdate);
+    public ResponseEntity<PersonalSummaryResponseDTO> parseUpdate(@Valid @RequestBody PersonalResquestPatchDTO personalUpdate, @PathVariable UUID id){
+        PersonalSummaryResponseDTO response = personalService.patch(id, personalUpdate);
         return ResponseEntity.ok().body(response);
     }
 }

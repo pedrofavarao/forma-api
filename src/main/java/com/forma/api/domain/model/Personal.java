@@ -1,22 +1,29 @@
 package com.forma.api.domain.model;
 
-import com.forma.api.domain.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "personal")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Personal {
 
     @Id
     private UUID id;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(cascade = CascadeType.ALL
+//    orphanRemoval = true
+    )
     @MapsId
     private User user;
 
@@ -26,11 +33,7 @@ public class Personal {
     @Column(name = "cref", unique = true)
     private String cref;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "personal")
     private List<Student> students;
-
-    @PrePersist
-    public void prePersist(){
-        this.user.setUserType(Role.PERSONAL);
-    }
 }
